@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "nessus.name" . }}
+  labels:
+    {{- include "nessus.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nessus.selectorLabels" . | indent 6 }}
+  serviceName: {{ include "nessus.name" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "nessus.labels" . | indent 8 }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: nessus
+        image: cloud-repo.betware.com:5000/it-team/nessus:10.0.1
+        volumeMounts:
+        - mountPath: "/opt/nessus"
+          name: {{ include "nessus.name" . }}
+        securityContext:
+          privileged: true
+          capabilities:
+           add:
+            - SYS_ADMIN
+  {{- if .Values.storage.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "nessus.name" . }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.storage.capacity | default "50Mi" }}
+  {{- end }}
+

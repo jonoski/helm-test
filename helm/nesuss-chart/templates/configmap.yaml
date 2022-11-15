@@ -1,0 +1,10 @@
+{{- if .Values.configMap }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nessus.name" . }}
+data:
+{{- with .Values.configMap }} 
+{{ toYaml . | indent 2 }} 
+{{- end }}
+{{- end }} 

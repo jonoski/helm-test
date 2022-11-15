@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "nessus.name" . }} 
+  labels: 
+    {{- include "nessus.labels" . | indent 4 }} 
+spec:
+ selector:
+   {{- include "nessus.selectorLabels" . | indent 4 }}
+ ports:
+  - port: {{ .Values.service.port }}
+ type: {{ .Values.service.type }} 

@@ -1,0 +1,12 @@
+global:
+  hosts:
+    web: "nessus.it.eu-central-1.nextgl.com"
+  imagePullSecrets: [{"name": "regcred"}]
+
+ingress:
+  enabled: true
+  tls: []
+  hosts:
+    - host: "{{ .Values.global.hosts.web }}"
+      paths:
+        - path: /

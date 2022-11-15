@@ -1,0 +1,9 @@
+defaultNamespace: nessus
+helm:
+  valuesFiles:
+    - aws-values.yaml
+  releaseName: nesuss
+  chart: nessus
+  repo: https://cloud-repo.betware.com:5000/artifactory/helm
+  version: 0.1.3
+  force: false
